@@ -1,4 +1,5 @@
 killall jackd
+killall chuck
 sleep 1
 /usr/bin/jackd -dalsa -dhw:A96 -r48000 -p1024 &
 sleep 2
