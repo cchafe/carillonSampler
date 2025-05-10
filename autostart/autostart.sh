@@ -4,5 +4,5 @@ sleep 1
 sleep 2
 chuck -busize:32 /home/cc/carillonSampler/ck/carillonSamplerMIDI.ck &
 sleep 2
-aconnect 28:0 129:0
+aconnect 28:0 RtMidi\ Input\ Client:0
 
