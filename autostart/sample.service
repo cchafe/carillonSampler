@@ -7,7 +7,7 @@
  Type=oneshot
  RemainAfterExit=true
  ExecStartPre=/bin/sleep 20
- ExecStart=/bin/sh /home/cc/autostart/autostart.sh
+ ExecStart=/bin/sh /home/cc/carillonSampler/autostart/autostart.sh
 
  [Install]
  WantedBy=default.target
