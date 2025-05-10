@@ -1,0 +1,15 @@
+ [Unit]
+ Description=My Sample Service
+
+ [Service]
+ Environment=DISPLAY=:0.0
+ Environment=XAUTHORITY=/home/cc/.Xauthority
+ Type=oneshot
+ RemainAfterExit=true
+ ExecStartPre=/bin/sleep 20
+ ExecStart=/bin/sh /home/cc/autostart/autostart.sh
+
+ [Install]
+ WantedBy=default.target
+ 
+
