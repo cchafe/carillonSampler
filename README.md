@@ -14,8 +14,8 @@ intended for standalone Raspberry Pi4b+, headless, booting into live application
 5. start vmpk, edit MIDI connections -- ALSA
 6. git clone this repository code
 7. cd carillonSampler
-8. chuck carillonSampler.ck
-9. connect MIDI
+8. chuck carillonSamplerMIDI.ck
+9. qjackctl ALSA patch something like 130:VMPK:Output to 128:RtMidi:Input Client
 
 tested
 1. vanilla headphone out, limited to 22kHz -- not useable
