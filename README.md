@@ -7,3 +7,17 @@ started from
 [chuck MIDI example](https://chuck.stanford.edu/doc/examples/midi/polyfony.ck)
 
 intended for standalone Raspberry Pi4b+, headless, booting into live application
+1. Raspberry Pi Imager on fedora 41 laptop to burn SDcard with latest Raspbian -- Debian 12 Bookworm
+2. install in rpi, configure with defaults and upgrade
+3. sudo apt install chuck vmpk
+4. qjackctl, choose audio device, 48k, 1024
+5. start vmpk, edit MIDI connections -- ALSA
+6. git clone this repository code
+7. cd carillonSampler
+8. chuck carillonSampler.ck
+9. connect MIDI
+
+tested
+1. vanilla headphone out, limited to 22kHz -- not useable
+2. USB audio interface, 48kHz, limited to 1024 FPP -- ok
+3. HifiBerry, also 1024 -- ok
