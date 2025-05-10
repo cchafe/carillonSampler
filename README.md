@@ -18,6 +18,6 @@ intended for standalone Raspberry Pi4b+, headless, booting into live application
 9. qjackctl ALSA patch something like 130:VMPK:Output to 128:RtMidi:Input Client
 
 tested
-1. vanilla headphone out, limited to 22kHz -- not useable
-2. USB audio interface, 48kHz, limited to 1024 FPP -- ok
-3. HifiBerry, also 1024 -- ok
+1. vanilla internal headphone out, limited to 22kHz -- not useable quality
+2. external USB audio interface, 48kHz, limited to 1024 FPP -- ok
+3. HifiBerry, also needs 1024 -- ok
