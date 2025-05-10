@@ -1,7 +1,7 @@
-// chuck bellSynth.ck
-// run vmpk -- 130:VMPK:Output
-// start this -- 128:RtMidi:Input Client
-// qjackctl ALSA patch 130:VMPK:Output to 128:RtMidi:Input Client
+// chuck ck/carillonSamplerMIDI.ck
+// run vmpk -- check qjackctl, should see something like 130:VMPK:Output
+// chuck this file -- should see something like 128:RtMidi:Input Client
+// qjackctl ALSA patch something like 130:VMPK:Output to 128:RtMidi:Input Client
 
 0 => int device;
 
