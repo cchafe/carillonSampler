@@ -31,4 +31,5 @@ tested MIDI cable
 1. Presonus A96 MIDI in to 128:RtMidi:Input Client
 2. Emu Xmidi1x1 tab from RtMidi:Output Client
 
-
+tested external loop via MIDI cable
+1. testBellsLoopMIDIout.ck
