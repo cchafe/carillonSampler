@@ -36,13 +36,12 @@ fun void satNote( int kn ) {
   bellCtr++;
   nSndBufs %=> bellCtr;
   bellCtr => int bc;
-  cntBell %=> kn;
   kn%2 => int ch;
   <<< satFile[ kn ] >>>;
   bellSamp[ bc ].read( "../sather/" + satFile[ kn ]);
   bellSamp[ bc ].gain(0.2);
   bellSamp[ bc ] => dac.chan( ch );
-  (2.5)::second => now;
+  (4.0)::second => now;
   bellSamp[ bc ] =< dac.chan( ch );
 }
 
@@ -53,14 +52,14 @@ class NoteEvent extends Event
 }
 NoteEvent on;
 Event @ us[128];
-//Gain g => JCRev r => dac;
-//.1 => g.gain;
-//.2 => r.mix;
+Gain g => JCRev r => dac;
+.1 => g.gain;
+.2 => r.mix;
 
 fun void handler()
 {
     // don't connect to dac until we need it
-//    Mandolin m;
+    Mandolin m;
     Event off;
     int note;
 
@@ -69,19 +68,19 @@ fun void handler()
         on => now;
         on.note => note;
         // dynamically repatch
-//        m => g;
-//        Std.mtof( note ) => m.freq;
-//        Math.random2f( .6, .8 ) => m.pluckPos;
+        m => g;
+        Std.mtof( note ) => m.freq;
+        Math.random2f( .6, .8 ) => m.pluckPos;
 //        on.velocity / 128.0 => m.pluck;
-//        off @=> us[note];
+        off @=> us[note];
 spork ~satNote( note );
 
-//        off => now;
+        off => now;
         null @=> us[note];
-//        m =< g;
+        m =< g;
     }
 }
-for( 0 => int i; i < 10; i++ ) spork ~ handler();
+for( 0 => int i; i < 20; i++ ) spork ~ handler();
 while( true )
 {
     // wait on midi event
@@ -112,7 +111,7 @@ while( true )
         }
         else if( (msg.data1 & 0xf0) == 0x80 )
         {
-//            us[msg.data2].signal();
+            us[msg.data2].signal();
         }
     }
 }
