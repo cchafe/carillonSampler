@@ -12,14 +12,16 @@ MidiMsg msg;
 if( !mout.open(0) ) me.exit();
 
 <<< "MIDI output device opened...", "" >>>;
-0 => int kn;
+43 => int loBell; // g
+103 => int hiBell; // g
+(hiBell - loBell) + 1 => int nBells;
+loBell => int kn;
 while( true )
 {
     0x90 => msg.data1;
     // pitch
     kn => msg.data2;
-    kn++;
-    68 %=> kn;
+    if (kn == hiBell) loBell => kn; else kn++;
     // velocity
     127 => msg.data3;
     // print
