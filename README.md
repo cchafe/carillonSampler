@@ -19,6 +19,9 @@ standalone Raspberry Pi4b+, headless, boots into live application
   * assumes Presonus A96 audio interface (adjust as needed for Jack and for MIDI input)
 6. `reboot`
 7. connect a MIDI keyboard to the A96 with a MIDI cable and play some bells
+
+install OS, chuck, project; configure autostart, reboot + test
+
 ----
 1. (optional for development)
   * `sudo systemctl enable ssh.service`
@@ -30,6 +33,9 @@ standalone Raspberry Pi4b+, headless, boots into live application
 2. (optional for stress testing)
  * generate test loop from another chuck host connected with a MIDI cable
     * `cd ck; chuck testBellsLoopMIDIout.ck`
+
+enable SSH, GUI's for patching + virtual piano keyboard; run chuck project; test with virtual keyboard or external MIDI
+
 ----
 
 tested audio
