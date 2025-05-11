@@ -21,6 +21,7 @@ while ( ls.more() ) {
 <<< cntBell >>>;
 
 string satFile[ cntBell ];
+float satDur [ cntBell ];
 ls.open( "../satBells.txt", FileIO.READ );
 0 => cntBell;
 while ( ls.more() ) {
@@ -28,24 +29,50 @@ while ( ls.more() ) {
   cntBell++;
 }
 
+ls.open( "../satBellsDurs.txt", FileIO.READ );
+for( 0 => int i; i < cntBell; i++ ) 
+  Std.atof( ls.readLine() ) => satDur[ i ];
+
 200 => int nSndBufs;
 SndBuf bellSamp[nSndBufs];
 -1 => int bellCtr;
 
 43 => int loBell; // g
 103 => int hiBell; // g
+if (false) // measure durations with RMS
+for( 0 => int i; i < cntBell; i++ ) {
+  SndBuf bell => FFT fft =^ RMS rms => blackhole;
+  bell.read( "../sather/" + satFile[ i ]);
+  //bell.gain(0.5);
+  2048 => fft.size;
+  Windowing.hann(fft.size()) => fft.window;
+  now => time start;
+  now + bell.length() => time quit;
+  1000.0 => float rmsVal;
+  now + 1::second => time slop;
+  while( (now < quit) && ( (now < slop) || ( rmsVal > 5.0 ) ) ) {
+    rms.upchuck() @=> UAnaBlob blob;
+    Math.rmstodb( blob.fval(0) ) => rmsVal;
+    fft.size()::samp => now;
+  }
+//  <<< i, satFile[ i ] >>>;
+//  <<< bell.length()/second >>>; 
+//  <<< rmsVal, now/second >>>;
+<<< now/second-start/second,"" >>>;
+}
 
 fun void satNote( int kn ) { // loBell to hiBell range
   bellCtr++;
   nSndBufs %=> bellCtr;
   bellCtr => int bc;
   kn%2 => int ch;
+  if ( ( kn  < loBell ) || ( kn  > hiBell ) ) return; 
   kn - loBell => int fn; // satFile index
-  <<< kn, satFile[ fn ] >>>;
+  <<< kn, satFile[ fn ], satDur[ fn ] >>>;
   bellSamp[ bc ].read( "../sather/" + satFile[ fn ]);
   bellSamp[ bc ].gain(0.5);
   bellSamp[ bc ] => dac.chan( ch );
-  (2.5)::second => now;
+  satDur[ fn ]::second => now;
   bellSamp[ bc ] =< dac.chan( ch );
 }
 
