@@ -24,13 +24,16 @@ while( true )
     if (kn == hiBell) loBell => kn; else kn++;
     // velocity
     127 => msg.data3;
+    for ( 7 => int v; v <= 127; 10 +=> v) {
+      v => msg.data3;
     // print
-    <<< "sending NOTE ON message...", "" >>>;
+    <<< "sending NOTE ON message...", kn, v >>>;
     // send MIDI message
-    mout.send( msg );
+      mout.send( msg );
 
     // let time pass
-    .1::second => now;
+      .1::second => now;
+    }
     
     // MIDI note off message
     // 0x80 + channel (0 in this case)
@@ -45,7 +48,7 @@ while( true )
     mout.send( msg );
 
     // let time pass
-    .1::second => now;
+//    .1::second => now;
 }
 
 

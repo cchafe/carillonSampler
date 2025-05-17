@@ -35,6 +35,7 @@ for( 0 => int i; i < cntBell; i++ )
 
 200 => int nSndBufs;
 SndBuf bellSamp[nSndBufs];
+Pan2 pan[nSndBufs];
 -1 => int bellCtr;
 
 43 => int loBell; // g
@@ -61,7 +62,7 @@ for( 0 => int i; i < cntBell; i++ ) {
 <<< now/second-start/second,"" >>>;
 }
 
-fun void satNote( int kn ) { // loBell to hiBell range
+fun void satNote( int kn, int v ) { // loBell to hiBell range
   bellCtr++;
   nSndBufs %=> bellCtr;
   bellCtr => int bc;
@@ -70,10 +71,14 @@ fun void satNote( int kn ) { // loBell to hiBell range
   kn - loBell => int fn; // satFile index
   <<< kn, satFile[ fn ], satDur[ fn ] >>>;
   bellSamp[ bc ].read( "../sather/" + satFile[ fn ]);
-  bellSamp[ bc ].gain(0.5);
-  bellSamp[ bc ] => dac.chan( ch );
-  satDur[ fn ]::second => now;
-  bellSamp[ bc ] =< dac.chan( ch );
+  bellSamp[ bc ].gain( 0.2 * v$float / 127.0);
+  bellSamp[ bc ] => pan[ bc ] => dac;
+  if (ch) 
+    pan[ bc ].pan( Math.cos( 6.28 * v$float / 127.0) );
+  else
+    pan[ bc ].pan( -1.0 * Math.cos( 6.28 * v$float / 127.0) );
+  0.5 * satDur[ fn ]::second => now;
+  bellSamp[ bc ] =< pan[ bc ] =< dac;
 }
 
 class NoteEvent extends Event
@@ -87,11 +92,13 @@ Event @ us[128];
 fun void handler()
 {
     int note;
+    int velocity;
     while( true )
     {
         on => now;
         on.note => note;
-        spork ~satNote( note ); 
+        on.velocity => velocity;
+        spork ~satNote( note, velocity ); 
         null @=> us[note];
     }
 }
