@@ -39,7 +39,7 @@ while( true )
     // 0x80 + channel (0 in this case)
     0x80 => msg.data1;
     // pitch
-    kn => msg.data2;
+    kn - 12 => msg.data2;
     // velocity
     0 => msg.data3;
     // print

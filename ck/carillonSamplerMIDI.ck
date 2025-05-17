@@ -67,7 +67,6 @@ fun void satNote( int kn, int v ) { // loBell to hiBell range
   nSndBufs %=> bellCtr;
   bellCtr => int bc;
   kn%2 => int ch;
-  if ( ( kn  < loBell ) || ( kn  > hiBell ) ) return; 
   kn - loBell => int fn; // satFile index
   <<< kn, satFile[ fn ], satDur[ fn ] >>>;
   bellSamp[ bc ].read( "../sather/" + satFile[ fn ]);
@@ -99,6 +98,7 @@ fun void handler()
         on.note => note;
         12 +=> note; // shift the range left on the pn kbd
         on.velocity => velocity;
+  if ( ( note  < loBell ) || ( note  > hiBell ) ) continue; 
         spork ~satNote( note, velocity ); 
         null @=> us[note];
     }
