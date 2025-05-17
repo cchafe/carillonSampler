@@ -86,7 +86,7 @@ class NoteEvent extends Event
     int velocity;
 }
 NoteEvent on;
-Event @ us[128];
+//Event @ us[128];
 
 fun void handler()
 {
@@ -100,7 +100,7 @@ fun void handler()
         on.velocity => velocity;
   if ( ( note  < loBell ) || ( note  > hiBell ) ) continue; 
         spork ~satNote( note, velocity ); 
-        null @=> us[note];
+//        null @=> us[note];
     }
 }
 
@@ -128,7 +128,7 @@ while( true )
             }
             else
             {
-                if( us[msg.data2] != null ) us[msg.data2].signal();
+//                if( us[msg.data2] != null ) us[msg.data2].signal();
             }
         }
         else if( (msg.data1 & 0xf0) == 0x80 )
