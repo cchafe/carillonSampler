@@ -97,6 +97,7 @@ fun void handler()
     {
         on => now;
         on.note => note;
+        12 +=> note; // shift the range left on the pn kbd
         on.velocity => velocity;
         spork ~satNote( note, velocity ); 
         null @=> us[note];
