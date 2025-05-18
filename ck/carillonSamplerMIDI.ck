@@ -13,35 +13,43 @@ if( !min.open( device ) ) me.exit();
 
 FileIO ls;
 ls.open( "../satBells.txt", FileIO.READ );
-0 => int cntBell;
+0 => int nSndBufs;
 while ( ls.more() ) {
   ls.readLine();
-  cntBell++;
+  nSndBufs++;
 }
-<<< cntBell >>>;
+<<< nSndBufs >>>;
 
-string satFile[ cntBell ];
-float satDur [ cntBell ];
+string satFile[ nSndBufs ];
+float satDur [ nSndBufs ];
+int poly [ nSndBufs ];
 ls.open( "../satBells.txt", FileIO.READ );
-0 => cntBell;
+0 => nSndBufs;
 while ( ls.more() ) {
-  ls.readLine() => satFile[ cntBell ];
-  cntBell++;
+  ls.readLine() => satFile[ nSndBufs ];
+  nSndBufs++;
 }
 
 ls.open( "../satBellsDurs.txt", FileIO.READ );
-for( 0 => int i; i < cntBell; i++ ) 
+for( 0 => int i; i < nSndBufs; i++ ) 
   Std.atof( ls.readLine() ) => satDur[ i ];
 
-200 => int nSndBufs;
-SndBuf bellSamp[nSndBufs];
-Pan2 pan[nSndBufs];
--1 => int bellCtr;
+12 => int nVoices;
+
+SndBuf bellSamp[nSndBufs][nVoices];
+Pan2 pan[nSndBufs][nVoices];
+for( 0 => int i; i < nSndBufs; i++ ) {
+  0 => poly[ i ];
+  for( 0 => int j; j < nVoices; j++ ) {
+    bellSamp[ i ][ j ].read( "../sather/" + satFile[ i ]);
+    bellSamp[ i ][ j ] => pan[ i ][ j ];
+  }
+}
 
 43 => int loBell; // g
 103 => int hiBell; // g
 if (false) // measure durations with RMS
-for( 0 => int i; i < cntBell; i++ ) {
+for( 0 => int i; i < nSndBufs; i++ ) {
   SndBuf bell => FFT fft =^ RMS rms => blackhole;
   bell.read( "../sather/" + satFile[ i ]);
   //bell.gain(0.5);
@@ -63,21 +71,23 @@ for( 0 => int i; i < cntBell; i++ ) {
 }
 
 fun void satNote( int kn, int v ) { // loBell to hiBell range
-  bellCtr++;
-  nSndBufs %=> bellCtr;
-  bellCtr => int bc;
-  kn%2 => int ch;
   kn - loBell => int fn; // satFile index
-  <<< kn, satFile[ fn ], satDur[ fn ] >>>;
-  bellSamp[ bc ].read( "../sather/" + satFile[ fn ]);
-  bellSamp[ bc ].gain( 0.2 * v$float / 127.0);
-  bellSamp[ bc ] => pan[ bc ] => dac;
+  fn%2 => int ch;
+  poly[ fn ] => int vn;
+  nVoices %=> vn;
+  vn + 1 => poly[ fn ];
+//  <<< kn, satFile[ fn ], satDur[ fn ], vn >>>;
+  bellSamp[ fn ][ vn ].pos( 0 );
+  pan[ fn ][ vn ].gain( 0.2 * v$float / 127.0);
+  pan[ fn ][ vn ] => dac;
+//  bellSamp[ fn ] => pan[ fn ] => dac;
   if (ch) 
-    pan[ bc ].pan( Math.cos( 6.28 * v$float / 127.0) );
+    pan[ fn ][ vn ].pan( Math.cos( 6.28 * v$float / 127.0) );
   else
-    pan[ bc ].pan( -1.0 * Math.cos( 6.28 * v$float / 127.0) );
-  0.5 * satDur[ fn ]::second => now;
-  bellSamp[ bc ] =< pan[ bc ] =< dac;
+    pan[ fn ][ vn ].pan( -1.0 * Math.cos( 6.28 * v$float / 127.0) );
+  satDur[ fn ]::second => now;
+  pan[ fn ][ vn ] =< dac;
+//  bellSamp[ fn ] =< pan[ fn ] =< dac;
 }
 
 class NoteEvent extends Event

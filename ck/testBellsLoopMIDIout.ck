@@ -32,7 +32,7 @@ while( true )
 //      <<< "sending NOTE OFF message...", "" >>>;
 //      mout.send( msg );
     }
-      .1::second => now;
+//      .1::second => now;
     if (kn == hiBell) loBell => kn; else kn++;
 }
 
