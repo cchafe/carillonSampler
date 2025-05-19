@@ -18,14 +18,14 @@ if( !mout.open(0) ) me.exit();
 loBell => int kn;
 while( true )
 {
-    for ( 7 => int v; v <= 127; 10 +=> v) {
+    for ( 117 => int v; v <= 127; 10 +=> v) {
       0x90 => msg.data1;
       kn - 12 => msg.data2;
       v => msg.data3;
     <<< "sending NOTE ON message...", kn, v >>>;
       mout.send( msg );
 
-      .1::second => now;
+      400::ms => now;
 
 //      0x80 => msg.data1;
 //      0 => msg.data3;

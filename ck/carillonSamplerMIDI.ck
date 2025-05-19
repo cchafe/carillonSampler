@@ -34,7 +34,7 @@ ls.open( "../satBellsDurs.txt", FileIO.READ );
 for( 0 => int i; i < nSndBufs; i++ ) 
   Std.atof( ls.readLine() ) => satDur[ i ];
 
-12 => int nVoices;
+2 => int nVoices; // rpi 4 // 12 len5
 
 SndBuf bellSamp[nSndBufs][nVoices];
 Pan2 pan[nSndBufs][nVoices];
