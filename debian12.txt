@@ -1,0 +1,214 @@
+///////////////////////
+may-2025
+
+debian 12 chuck was very ancient
+(it's in 13 but that's later this year for raspbian)
+
+sudo apt update
+sudo apt upgrade
+(but actually should be sudo apt full-upgrade next time)
+comment out these in autostart.sh (seems to have changed?)
+killall chuck
+killall jackd
+n
+eed chuck upgrade but that's not possible so build it
+sudo apt install libjack-jackd2-dev
+don't do this -- broken deps -- sudo apt install libpulse-dev
+sudo apt install pipewire-alsa
+cd chuck-1.5.5.0/src/
+make clean
+make linux-jack
+qjackctl &
+...run a test tone...
+
+
+///////////////////////
+apr-2025
+fresh install to 31GB sandisk
+https://www.raspberrypi.com/software/
+on len6 / f41 -------------------------------
+sudo dnf install rpi-imager
+use rpi-imager GUI from app menu
+raspbian latest 64-bit
+
+on new card ---------------------------------
+sudo apt autoremove
+sudo apt upgrade
+reboot
+sudo apt install cmake freeglut3-dev libfftw3-dev portaudio19-dev qjackctl
+sudo apt install qt6*
+
+clone new card ---------------------------------
+sudo apt install piclone
+
+It will only work with the command which launches it in the desktop file - "sudo dbus-launch piclone". Both of these are required - it needs sudo permissions for many of the gparted-type operations it performs, and it needs dbus-launch so it accesses the session bus for the drive monitor rather than the system bus which would otherwise be used with sudo.
+
+ussd in samsung card adapter in card2usb adapter in usb
+[don't use the card slot -- doesn't work for the following steps]
+let the ussd be mounted and don't unmount
+lsblk should show
+sda disk
+-- sda1 partition
+[don't try it with mmcblk0]
+
+////////////////////////////////
+after scrollingSpectrogram, to build stk
+(on debian bookworm)
+////////////////////////////////
+git clone  ------ git-tam
+
+reboot
+cd git-tam
+git checkout dev
+cd qt/stk
+qmake6
+
+git clone ------- stk
+sudo apt install autoconf
+autoconf
+./configure
+make
+sudo make install
+sudo rm /lib/aarch64-linux-gnu/libstk*
+sudo cp /usr/local/lib/libstk* /lib/aarch64-linux-gnu/
+
+cd git-tam/qt/stk
+make
+
+cd git-tam/qt/stk
+git checkout energy
+
+////////////////////////////
+not using qt, but
+qt6-base-dev
+qt6-tools-dev
+
+-- comes with -- sudo apt install git
+https://github.com/cchafe/scrollingSpectrogram.git
+git checkout montam
+-- comes with -- sudo apt install build-essential
+sudo apt install cmake
+sudo apt install freeglut3-dev
+sudo apt install libfftw3-dev
+sudo apt install portaudio19-dev
+sudo apt install qjackctl
+
+sudo service ssh start
+
+related hints
+pw-cat -r --target 54 /tmp/xxx.wav
+
+////////////////////////////////
+after R2
+////////////////////////////////
+
+zenity hints
+https://www.linux.org/threads/introduction-to-zenity-part-1.44381/
+https://www.linux.org/threads/introduction-to-zenity-part-2.44749/
+
+sudo apt install audacity
+sudo apt install ecasound [not needed, removed]
+
+/usr/bin/jackd -dalsa -dhw:CODEC -r48000 -p128
+make
+
+ Static hostname: raspberrypi
+       Icon name: computer
+      Machine ID: 321d82ba61684fe28600cd193d6362a5
+         Boot ID: 64d47aad63304da58ad437e0724cc82e
+Operating System: Debian GNU/Linux 12 (bookworm)  
+          Kernel: Linux 6.6.47+rpt-rpi-v8
+    Architecture: arm64
+
+pipewire by default!!
+
+sudo apt autoremove
+sudo apt upgrade
+reboot
+
+autostart hints
+https://forums.raspberrypi.com/viewtopic.php?t=294014
+
+sudo systemctl disable tam.service
+  sudo gedit /lib/systemd/system/tam.service &
+    sudo systemctl daemon-reload
+    sudo systemctl stop tam.service
+    sudo systemctl start tam.service
+    sudo systemctl disable tam.service
+    sudo systemctl enable tam.service
+
+sudo systemctl disable sample.service
+sudo gedit /lib/systemd/system/sample.service &
+sudo systemctl daemon-reload
+sudo systemctl stop sample.service
+sudo systemctl start sample.service
+sudo systemctl disable sample.service
+sudo systemctl enable sample.service
+
+sudo systemctl status pipewire.service
+
+sudo gedit /lib/systemd/system/sample.service &
+////////////////////////////////////////////////////////////
+ [Unit]
+ Description=My Sample Service
+ After=graphical.target
+ Wants=graphical.target
+
+ [Service]
+ Environment=DISPLAY=:0.0
+ Environment=XAUTHORITY=/home/cc/.Xauthority
+ Type=oneshot
+ RemainAfterExit=true
+ ExecStartPre=/bin/sleep 1
+ ExecStart=/bin/sh /home/cc/f40xfce/button.sh
+# ExecStart=/bin/sh -c 'zenity --info --text="USB Disk Added"'
+
+ [Install]
+ WantedBy=default.target
+////////////////////////////////////////////////////////////
+nope needs to be systemctl --user to get at pipewire otherwise scrolling bypasses it and connects direct to device
+cc@raspberrypi:~ $ scp /tmp/xxx.wav cmn9.stanford.edu:/tmp/
+/////
+cd .config/systemd/user
+sample.service
+/////
+
+ [Unit]
+ Description=My Sample Service
+#  After=pipewire.service wireplumber.service
+#  Wants=pipewire.service wireplumber.service
+# After=graphical.target pipewire.service wireplumber.service
+# Wants=graphical.target pipewire.service wireplumber.service
+
+ [Service]
+ Environment=DISPLAY=:0.0
+ Environment=XAUTHORITY=/home/cc/.Xauthority
+ Type=oneshot
+ RemainAfterExit=true
+ ExecStartPre=/bin/sleep 20
+ ExecStart=/bin/sh /home/cc/f40xfce/button.sh
+# ExecStart=/bin/sh -c 'zenity --info --text="USB Disk Added"'
+
+ [Install]
+ WantedBy=default.target
+ 
+ # https://unix.stackexchange.com/questions/776537/display-variable-in-systemd-user-session
+ # https://scruss.com/blog/2017/10/22/creating-a-systemd-user-service-on-your-raspberry-pi/
+/////
+
+systemctl --user daemon-reload
+systemctl --user stop  sample.service
+systemctl --user disable  sample.service
+systemctl --user enable  sample.service
+
+
+////////////////////////////////
+after scrollingSpectrogram, to build stk
+(on deian bookworm)
+////////////////////////////////
+sudo apt upgrade
+sudo apt install qt6*
+
+
+
+
