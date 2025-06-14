@@ -10,16 +10,41 @@ sudo apt upgrade
 comment out these in autostart.sh (seems to have changed?)
 killall chuck
 killall jackd
-n
-eed chuck upgrade but that's not possible so build it
-sudo apt install libjack-jackd2-dev
+
+need chuck upgrade but that's not possible so build it
+sudo apt install build-essential bison flex libsndfile1-dev \
+  libasound2-dev libjack-jackd2-dev
 don't do this -- broken deps -- sudo apt install libpulse-dev
 sudo apt install pipewire-alsa
-cd chuck-1.5.5.0/src/
+sudo apt install qjackctl gedit vmpk
+  
+wget https://chuck.stanford.edu/release/files/chuck-1.5.5.1.tgz
+tar -xvzf chuck-1.5.5.1.tgz
+cd chuck-1.5.5.1/src/
 make clean
-make linux-jack
+make linux-jack linux-alsa
+sudo make install
 qjackctl &
 ...run a test tone...
+
+git clone https://github.com/cchafe/carillonSampler.git
+cd carillonSampler/
+git checkout veloc
+
+*** don't start jack, runs in pipewire alsa ***
+/usr/bin/jackd -dalsa -dhw:A96 -r48000 -p1024 &
+cd /home/cc/carillonSampler/ck
+chuck -busize:32 carillonSamplerMIDI.ck &
+aconnect AudioBox\ USB\ 96:0 RtMidi\ Input\ Client:0
+
+cd /home/cc/.config
+mkdir systemd
+cd systemd/
+mkdir user
+
+cd 
+cd carillonSampler/autostart/
+./updateAutostartService.sh
 
 
 ///////////////////////
