@@ -46,6 +46,7 @@ cd
 cd carillonSampler/autostart/
 ./updateAutostartService.sh
 
+systemctl --user status sample.service
 
 ///////////////////////
 apr-2025
