@@ -37,6 +37,8 @@ cd /home/cc/carillonSampler/ck
 chuck -busize:32 carillonSamplerMIDI.ck &
 aconnect AudioBox\ USB\ 96:0 RtMidi\ Input\ Client:0
 
+*** only use qjackctl for checking the MIDI patch, don't start it ***
+
 cd /home/cc/.config
 mkdir systemd
 cd systemd/
@@ -46,6 +48,7 @@ cd
 cd carillonSampler/autostart/
 ./updateAutostartService.sh
 
+after reboot verify autostart
 systemctl --user status sample.service
 
 ///////////////////////
